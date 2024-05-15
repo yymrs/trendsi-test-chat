@@ -1,11 +1,8 @@
-import './App.css'
-import  ChatDom from '../src/chart';
+import "./App.css";
+import ChatDom from "../src/chart";
 
 function App() {
-
-  return (
-     <ChatDom></ChatDom>
-  )
+  return <ChatDom></ChatDom>;
 }
 
-export default App
+export default App;
