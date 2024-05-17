@@ -93,6 +93,11 @@ window.addEventListener("message", function (e) {
 //     console.log('html收到RN端的调用，并传递了数据，data = ' + data)
 //     alert('injectJavaScript')
 // }
+// const recognition = new window.webkitSpeechRecognition();
+// 开启连续识别
+// recognition.continuous = true;
+// 开启实时识别
+// recognition.interimResults = true;
 function ChDom() {
   // 消息列表
   const { messages, appendMsg, setTyping } = useMessages(initialMessages);
@@ -155,6 +160,7 @@ function ChDom() {
       }
     }
   }
+  let recognition = new window.webkitSpeechRecognition();
 
   // 快捷短语回调，可根据 item 数据做出不同的操作，这里以发送文本消息为例
   function handleQuickReplyClick(item) {
@@ -382,17 +388,43 @@ function ChDom() {
     );
   }
   const inputType = "text";
+  function onStart(e) {
+    console.log(e);
+    recognition = new window.webkitSpeechRecognition();
+    // if (recognition.permission) {
+    //   alert("拒绝了");
+    // } else {
+    // }
+    recognition.start();
+  }
+  function onEnd(e) {
+    console.log(e);
+    recognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript; // 获取识别结果
+      console.log("transcript", transcript);
+      handleSend("text", transcript);
+      // appendMsg({
+      //   type: renderType.text,
+      //   content: { answerRes: { headText: transcript } },
+      //   position: "right",
+      // });
+      recognition.abort();
+    };
+  }
+  function onCancel(e) {
+    console.log(e);
+  }
   return (
     <Chat
       className="mt-2"
       navbar={{ title: "TRENDSI" }}
       messages={messages}
-      inputType={inputType}
       placeholder="ask JJ please"
       renderMessageContent={renderMessageContent}
       quickReplies={defaultQuickReplies}
       onQuickReplyClick={handleQuickReplyClick}
       onSend={handleSend}
+      recorder={{ canRecord: true, onStart, onCancel, onEnd }}
       toolbar={[
         {
           type: "image",
