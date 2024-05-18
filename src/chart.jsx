@@ -2,12 +2,17 @@ import Chat, { Bubble, useMessages } from "@chatui/core";
 import { getChartDataApi } from "@/api/index.cjs";
 import { Icon } from "@chatui/core";
 import { Stepper, Step } from "@chatui/core";
+import Typewriter from "./Typewriter";
 /**
  * 1.模拟打字效果
  * 2qa.点击的时候标题展示出来
  */
 const renderType = {
   text: "text",
+  /**
+   * @description 系统回复
+   */
+  Aitext: "Aitext",
   /**
    * @description 默认问题简洁查询
    */
@@ -103,6 +108,10 @@ function ChDom() {
   const { messages, appendMsg, setTyping } = useMessages(initialMessages);
   async function handleSend(type, val) {
     console.log(type, val);
+    let tempSummary = false;
+    if (val == "Order summary") {
+      tempSummary = true;
+    }
     if (type === "text" && val.trim()) {
       // TODO: 发送请求
       appendMsg({
@@ -111,7 +120,7 @@ function ChDom() {
         position: "right",
       });
       setTyping(true);
-      const res = await getChartDataApi({ question: val }).catch((res) => res);
+      const res = await getChartDataApi({ question: tempSummary ? "user Mary Hrbek" : val }).catch((res) => res);
       console.log(res);
       if (res.code == 200) {
         const { isSorry, cardId, answer, sorryMsg } = res.result;
@@ -148,13 +157,13 @@ function ChDom() {
           });
         } else {
           appendMsg({
-            type: renderType.text,
+            type: renderType.Aitext,
             content: { answerRes: { headText: sorryMsg } },
           });
         }
       } else {
         appendMsg({
-          type: renderType.text,
+          type: renderType.Aitext,
           content: { answerRes: { headText: "Service error!" } },
         });
       }
@@ -186,7 +195,11 @@ function ChDom() {
     // };
     // window.ReactNativeWebView.postMessage(JSON.stringify(data));
     // window.postMessage(JSON.stringify(data))
-    handleSend("text", item.name);
+    if (item.name == "Order summary") {
+      handleSend("text", "Order summary");
+    } else {
+      handleSend("text", item.name);
+    }
   }
   /**
    * @description 点击展示qa问题
@@ -207,7 +220,7 @@ function ChDom() {
     content.show = true;
     setTimeout(() => {
       appendMsg({
-        type: renderType.text,
+        type: renderType.Aitext,
         content: { answerRes: { headText: content.info } },
       });
     }, 1000);
@@ -264,6 +277,8 @@ function ChDom() {
     switch (type) {
       case renderType.text:
         return <Bubble className="Bubble text !mr-0" content={content.answerRes.headText} />;
+      case renderType.Aitext:
+        return <Typewriter text={content.answerRes.headText}></Typewriter>;
       case renderType.image:
         return (
           <Bubble type="image">
