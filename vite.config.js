@@ -10,6 +10,7 @@ export default defineConfig({
       /* options */
     }),
   ],
+  base: "/trendsi-test-chat/",
   resolve: {
     //设置别名
     alias: {
