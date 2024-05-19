@@ -310,7 +310,7 @@ function ChDom() {
         <div>
           <Stepper current={3}>
             <Step title="Paid" desc={orderPayTime} />
-            <Step title="Processing" desc={orderPayTime} />
+            <Step title="Processing" desc={"The seller has 22h22m22s left to process."} />
             <Step title="Shipped" desc={orderPayTime} />
             <Step title="Delivered" desc={orderPayTime} />
             <Step title="Completed" />
