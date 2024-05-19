@@ -3,6 +3,7 @@ import { getChartDataApi } from "@/api/index.cjs";
 import { Icon } from "@chatui/core";
 import { Stepper, Step } from "@chatui/core";
 import Typewriter from "./Typewriter";
+// test
 /**
  * 1.模拟打字效果
  * 2qa.点击的时候标题展示出来
