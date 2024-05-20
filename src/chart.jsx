@@ -296,6 +296,7 @@ function ChDom() {
         return null;
     }
   }
+
   /**
    * @description 展示用户查询的订单状态
    * @param {*} event
@@ -304,17 +305,39 @@ function ChDom() {
   function renderOrderScheduling(data) {
     const content = JSON.parse(data.answerRes.content)[0];
     console.log(content, "contentcontentcontent");
-    const { orderPayTime } = content;
-    // const headText = data.answerRes.headText;
+    const list = [
+      "orderCreateTime", // 订单创建时间
+      "orderPayTime", // 订单支付时间
+      "minSendDate", // 供应商发货时间
+      "minCreateTime", // 仓库收货
+      "orderPackageTime", // 打包时间
+      "orderBeginCarton", // 订单装箱时间
+      "finishBoxTime", // 封箱时间
+      "internationalLogisticSendTime", // 中程揽收
+      "internationalLogisticDeliveryTime", // 中程抵达时间
+      "usReceiveTime", // 美仓收货时间
+      "packageCreateTime", // 尾程订单创建时间
+      "packageSendTime", // 尾程揽件时间
+      "packageDeliveryTime", // 尾程订单交付时间
+    ];
+    const contentkeys = Object.keys(content);
+    const hasSetp = list.filter((item) => {
+      return contentkeys.includes(item);
+    });
+    let findSetp = hasSetp.lastIndexOf((item) => {
+      return content[item] == "" || !content[item];
+    });
+    findSetp = findSetp == -1 ? list.length - 1 : findSetp;
+    function returnClass(name) {
+      return hasSetp.includes(name) ? "" : "disbStyle";
+    }
     return (
       <>
         <div>
-          <Stepper current={3}>
-            <Step title="Paid" desc={orderPayTime} />
-            <Step title="Processing" desc={"The seller has 22h22m22s left to process."} />
-            <Step title="Shipped" desc={orderPayTime} />
-            <Step title="Delivered" desc={orderPayTime} />
-            <Step title="Completed" />
+          <Stepper current={-1}>
+            {list.map((item) => {
+              return <Step className={returnClass(item)} key={item} title={item} desc={content[item]} />;
+            })}
           </Stepper>
         </div>
       </>

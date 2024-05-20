@@ -16,3 +16,19 @@ h1,h2,h3,h4,h5,h6,ul,li{
   margin: 0;
   padding: 0;
 }
+.Step span {
+  font-weight: bold;
+}
+.disbStyle {
+  color: #999;
+};
+.Step-content .Step-title > span {
+  font-weight: bold;
+}
+.Step-desc {
+  /* font-weight: bold; */
+}
+.disbStyle span {
+  color: #c8c9cc;
+  font-weight: bold
+};
