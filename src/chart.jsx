@@ -165,7 +165,7 @@ function ChDom() {
       } else {
         appendMsg({
           type: renderType.Aitext,
-          content: { answerRes: { headText: "Service error!" } },
+          content: { answerRes: { headText: "I'm sorry, I don't understand what you mean, please try again！" } },
         });
       }
     }
