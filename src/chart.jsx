@@ -125,9 +125,13 @@ function ChDom() {
       console.log(res);
       if (res.code == 200) {
         const { isSorry, cardId, answer, sorryMsg } = res.result;
-        let renderTypeValue;
-        if (isSorry == 0) {
-          const answerRes = JSON.parse(answer);
+        let renderTypeValue, answerRes;
+        try {
+          answerRes = JSON.parse(answer);
+        } catch (error) {
+          answerRes = null;
+        }
+        if (isSorry == 0 && answerRes) {
           console.log(answerRes);
           // 卡片ID1：文本卡片：2：图文卡片；3：表格卡片；4：timeline卡片；
           switch (cardId) {
@@ -159,7 +163,9 @@ function ChDom() {
         } else {
           appendMsg({
             type: renderType.Aitext,
-            content: { answerRes: { headText: sorryMsg } },
+            content: {
+              answerRes: { headText: sorryMsg || "I'm sorry, I don't understand what you mean, please try again！" },
+            },
           });
         }
       } else {
@@ -308,8 +314,8 @@ function ChDom() {
     const list = [
       "orderCreateTime", // 订单创建时间
       "orderPayTime", // 订单支付时间
-      "minSendDate", // 供应商发货时间
-      "minCreateTime", // 仓库收货
+      "supplierSendDate", // 供应商发货时间
+      "warehouseCreateTime", // 仓库收货
       "orderPackageTime", // 打包时间
       "orderBeginCarton", // 订单装箱时间
       "finishBoxTime", // 封箱时间
